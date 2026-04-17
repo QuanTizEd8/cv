@@ -1,0 +1,49 @@
+{
+  "name": "CV Builder",
+
+  // Use docker-compose so the Reactive Resume stack starts alongside
+  // the dev environment automatically.
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "app",
+  "workspaceFolder": "/workspaces/cv",
+
+  // Install Python deps after the container first starts.
+  "postCreateCommand": "pip install -r requirements.txt",
+
+  // Forward Reactive Resume's web UI to the host. VS Code will open a
+  // browser tab automatically on first start.
+  "forwardPorts": [3000],
+  "portsAttributes": {
+    "3000": {
+      "label": "Reactive Resume UI",
+      "onAutoForward": "openBrowser"
+    }
+  },
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        // YAML language support + schema validation for variant files
+        "redhat.vscode-yaml",
+        // Python IntelliSense
+        "ms-python.python",
+        // Python formatter
+        "ms-python.black-formatter"
+      ],
+      "settings": {
+        "python.defaultInterpreterPath": "/usr/local/bin/python",
+        "[python]": {
+          "editor.defaultFormatter": "ms-python.black-formatter"
+        },
+        // Associate variant YAML files with the RenderCV design schema
+        // (covers the `design:` block; the top-level `sections:` key is
+        // our own custom field that won't validate — that's expected).
+        "yaml.schemas": {
+          "https://raw.githubusercontent.com/rendercv/rendercv/refs/tags/v2.8/schema.json": [
+            "variants/*.yaml"
+          ]
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,31 @@
+# Generated CV files — never committed; rebuilt by CI on every push.
+output/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+*.egg-info/
+dist/
+.pytest_cache/
+
+# RenderCV stray output directory (normally cleaned by build.py)
+rendercv_output/
+_rendercv_tmp*/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Editor
+.vscode/
+*.swp
+*.swo
+*~
+
+# Node (if you run npm/npx locally)
+node_modules/

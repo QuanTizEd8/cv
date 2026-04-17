@@ -1,0 +1,216 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jsonresume/resume-schema/v1.0.0/schema.json",
+
+  "basics": {
+    "name": "Your Name",
+    "label": "Your Title / Role",
+    "image": "",
+    "email": "you@example.com",
+    "phone": "+1 555-555-5555",
+    "url": "https://yourwebsite.com",
+    "summary": "A brief professional summary — 2–3 sentences that work across both industry and academic contexts. Tailor the emphasis per variant via the variant YAML.",
+    "location": {
+      "address": "",
+      "postalCode": "",
+      "city": "City",
+      "countryCode": "US",
+      "region": "State"
+    },
+    "profiles": [
+      {
+        "network": "LinkedIn",
+        "username": "yourname",
+        "url": "https://linkedin.com/in/yourname"
+      },
+      {
+        "network": "GitHub",
+        "username": "yourname",
+        "url": "https://github.com/yourname"
+      },
+      {
+        "network": "ORCID",
+        "username": "0000-0000-0000-0000",
+        "url": "https://orcid.org/0000-0000-0000-0000"
+      }
+    ]
+  },
+
+  "work": [
+    {
+      "name": "Company or Institution Name",
+      "position": "Job Title / Role",
+      "url": "https://company.com",
+      "startDate": "2022-01",
+      "endDate": "",
+      "summary": "One-line description of the role (optional; omit if highlights are self-explanatory).",
+      "highlights": [
+        "Specific, quantified achievement — e.g. reduced inference latency by 40% via kernel fusion.",
+        "Second achievement.",
+        "Third achievement."
+      ],
+      "location": "City, ST"
+    },
+    {
+      "name": "Previous Employer",
+      "position": "Previous Role",
+      "url": "https://previous.com",
+      "startDate": "2019-06",
+      "endDate": "2021-12",
+      "summary": "",
+      "highlights": [
+        "Achievement 1.",
+        "Achievement 2."
+      ],
+      "location": "City, ST"
+    }
+  ],
+
+  "education": [
+    {
+      "institution": "University Name",
+      "url": "https://university.edu",
+      "area": "Field of Study",
+      "studyType": "PhD",
+      "startDate": "2015-09",
+      "endDate": "2020-05",
+      "score": "4.0/4.0",
+      "courses": [
+        "Course 1",
+        "Course 2"
+      ],
+      "location": "City, ST",
+      "advisors": ["Advisor Name"]
+    },
+    {
+      "institution": "University Name",
+      "url": "https://university2.edu",
+      "area": "Field of Study",
+      "studyType": "BS",
+      "startDate": "2011-09",
+      "endDate": "2015-05",
+      "score": "",
+      "courses": [],
+      "location": "City, ST"
+    }
+  ],
+
+  "publications": [
+    {
+      "name": "Full Paper Title",
+      "publisher": "Journal or Conference Name",
+      "releaseDate": "2023-06",
+      "url": "https://doi.org/10.1234/example",
+      "doi": "10.1234/example",
+      "summary": "One-sentence description of the contribution (optional).",
+      "authors": ["Your Name", "Co-Author Name", "Another Author"]
+    },
+    {
+      "name": "Another Paper Title",
+      "publisher": "Conference Name",
+      "releaseDate": "2022-03",
+      "url": "https://arxiv.org/abs/2202.00000",
+      "doi": "",
+      "summary": "",
+      "authors": ["Your Name", "Co-Author Name"]
+    }
+  ],
+
+  "skills": [
+    {
+      "name": "Programming Languages",
+      "level": "Expert",
+      "keywords": ["Python", "TypeScript", "C++", "Rust"]
+    },
+    {
+      "name": "Machine Learning",
+      "level": "Expert",
+      "keywords": ["PyTorch", "JAX", "Transformers", "CUDA"]
+    },
+    {
+      "name": "Infrastructure & DevOps",
+      "level": "Proficient",
+      "keywords": ["Docker", "Kubernetes", "GitHub Actions", "Terraform"]
+    },
+    {
+      "name": "Research",
+      "level": "Expert",
+      "keywords": ["Experimental design", "Statistical analysis", "Technical writing"]
+    }
+  ],
+
+  "projects": [
+    {
+      "name": "Project Name",
+      "description": "One-line description of what the project does.",
+      "highlights": [
+        "Key technical detail or accomplishment.",
+        "Scale / impact metric — e.g. 500+ GitHub stars."
+      ],
+      "keywords": ["Python", "Open source"],
+      "startDate": "2022-01",
+      "endDate": "2023-06",
+      "url": "https://github.com/yourname/project",
+      "roles": ["Lead Developer"],
+      "entity": "Personal / University / Company",
+      "type": "application"
+    }
+  ],
+
+  "awards": [
+    {
+      "title": "Award or Fellowship Name",
+      "date": "2022-05",
+      "awarder": "Awarding Organization",
+      "summary": "Brief description — e.g. competitive fellowship awarded to 10 researchers nationally."
+    }
+  ],
+
+  "certificates": [
+    {
+      "name": "Certificate Name",
+      "date": "2021-12",
+      "issuer": "Issuing Organization",
+      "url": "https://credential.example.com"
+    }
+  ],
+
+  "volunteer": [
+    {
+      "organization": "Department / Institution / Conference",
+      "position": "Teaching Assistant / Course Instructor / Reviewer",
+      "url": "https://department.university.edu",
+      "startDate": "2018-09",
+      "endDate": "2019-05",
+      "summary": "Brief description — e.g. TA for graduate-level Deep Learning (50 students).",
+      "highlights": [
+        "Designed and graded 5 problem sets.",
+        "Held weekly office hours; improved median exam score by 12 points."
+      ]
+    }
+  ],
+
+  "languages": [
+    {
+      "language": "English",
+      "fluency": "Native"
+    },
+    {
+      "language": "Spanish",
+      "fluency": "Professional working proficiency"
+    }
+  ],
+
+  "interests": [
+    {
+      "name": "Research Interests",
+      "keywords": ["Large language models", "Efficient inference", "Multimodal learning"]
+    }
+  ],
+
+  "references": [
+    {
+      "name": "Reference Name, Title, Institution",
+      "reference": "Available upon request."
+    }
+  ]
+}

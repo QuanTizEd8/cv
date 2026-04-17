@@ -1,0 +1,30 @@
+# Targeted resume — example template
+#
+# Copy this file to variants/targeted-<company>.yaml and customise it for
+# a specific job application.
+#
+# Workflow for a targeted application:
+#   1. cp variants/targeted-example.yaml variants/targeted-acme-corp.yaml
+#   2. Adjust section order and/or design below for the specific role.
+#   3. If you need to tailor individual bullet points:
+#        - Edit them directly in content/resume.json for this application,
+#          OR keep a branch per application (git checkout -b targeted/acme-corp).
+#   4. python scripts/build.py targeted-acme-corp
+#
+# For UX / design roles that need a visually rich PDF, use Reactive Resume
+# (localhost:3000 in the devcontainer) — import content/resume.json there
+# and export via its web UI instead of this build pipeline.
+
+sections:
+  - summary
+  - experience
+  - skills
+  - projects
+  - education
+
+design:
+  theme: classic
+  color: "#004f90"
+  font_size: "10pt"
+  page_size: us-letter
+  text_alignment: justified

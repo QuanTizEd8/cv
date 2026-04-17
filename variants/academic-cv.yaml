@@ -1,0 +1,51 @@
+# Academic CV variant
+#
+# Intended output: multi-page document for faculty applications, grants,
+# fellowships, and academic job markets. Shows everything.
+#
+# Build: python scripts/build.py academic-cv
+#        make academic
+
+# Ordered list of sections to include. Keys map to JSON Resume fields:
+#   experience    → work[]
+#   education     → education[]
+#   publications  → publications[]
+#   skills        → skills[]
+#   projects      → projects[]
+#   awards        → awards[]
+#   certificates  → certificates[]
+#   volunteering  → volunteer[]   ← use for teaching / service activities
+#   languages     → languages[]
+#   interests     → interests[]
+#   references    → references[]
+#   summary       → basics.summary (rendered as a plain-text section)
+#
+# Optional: add section_titles to rename a section heading in the output.
+#   Example — display "volunteering" data under a "Teaching & Service" heading:
+#     section_titles:
+#       volunteering: Teaching & Service
+sections:
+  - education
+  - experience
+  - publications
+  - volunteering
+  - projects
+  - awards
+  - skills
+  - languages
+  - references
+
+section_titles:
+  volunteering: Teaching & Service
+  interests: Research Interests
+
+# RenderCV design options.
+# Theme choices: classic, sb2nov, moderncv, engineeringresumes,
+#   engineeringclassic, harvard, opal, ink, ember
+# Run `rendercv render --help` for the full list of design keys.
+design:
+  theme: moderncv
+  color: "#003580"
+  font_size: "10pt"
+  page_size: a4
+  text_alignment: justified

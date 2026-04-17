@@ -1,0 +1,23 @@
+# Industry resume variant
+#
+# Intended output: concise 1–2 page resume for tech/industry job applications.
+# Omits publications, teaching, and other academic-specific sections.
+#
+# Build: python scripts/build.py industry-resume
+#        make industry
+
+sections:
+  - summary
+  - experience
+  - education
+  - skills
+  - projects
+  - awards
+  - certificates
+
+design:
+  theme: engineeringresumes
+  color: "#00A693"
+  font_size: "10pt"
+  page_size: us-letter
+  text_alignment: justified

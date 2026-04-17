@@ -1,0 +1,106 @@
+name: Build CV
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  # Allow manual trigger from the Actions tab
+  workflow_dispatch:
+
+# Required for GitHub Pages deployment
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Prevent concurrent Pages deployments; don't cancel in-flight builds.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt
+
+      - name: Install pandoc
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends pandoc
+
+      - name: Build all variants
+        run: make all
+
+      - name: Generate Pages index
+        # Creates output/index.html that links to every generated HTML variant.
+        run: |
+          python - <<'EOF'
+          import os, pathlib
+          out = pathlib.Path("output")
+          htmls = sorted(
+              f.stem for f in out.glob("*.html")
+              if f.stem != "index"
+          )
+          li = "\n  ".join(
+              f'<li><a href="{h}.html">{h.replace("-", " ").title()}</a></li>'
+              for h in htmls
+          )
+          (out / "index.html").write_text(
+              "<!DOCTYPE html>\n"
+              '<html lang="en">\n'
+              '<head><meta charset="utf-8">'
+              '<meta name="viewport" content="width=device-width,initial-scale=1">'
+              "<title>CV</title>"
+              "<style>"
+              "body{font-family:system-ui,sans-serif;max-width:600px;margin:3rem auto;padding:0 1rem}"
+              "h1{font-size:1.5rem}ul{line-height:2}"
+              "</style>"
+              "</head>\n"
+              f"<body><h1>CV Variants</h1><ul>\n  {li}\n</ul></body></html>\n"
+          )
+          EOF
+
+      - name: Upload PDFs as artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: cv-pdfs-${{ github.sha }}
+          path: output/*.pdf
+          # Keep 90 days of PDF history — handy for job applications
+          retention-days: 90
+
+      - name: Configure Pages
+        if: github.ref == 'refs/heads/main'
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        if: github.ref == 'refs/heads/main'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: output/
+
+  deploy:
+    name: Deploy to GitHub Pages
+    if: github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4
