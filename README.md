@@ -56,9 +56,13 @@ content/resume.json          ← single source of truth (JSON Resume standard)
         │   │  <variant>.md    — Markdown intermediate
         │   └  <variant>.docx  — DOCX for ATS upload portals
         │
-        └── Reactive Resume (localhost:3000, Docker)
-            import resume.json → pick visual template → export PDF
-            (used for UX / design roles that need a graphically rich layout)
+        ├── Reactive Resume (localhost:3000, Docker)
+        │   import resume.json → pick visual template → export PDF
+        │   (web UI; 13 built-in templates; graphically rich layouts)
+        │
+        └── resumed (Node.js) + npm JSON Resume themes
+            npx resumed render → output/visual-<theme>.html
+            (HTML-first; 100s of community themes; print to PDF from browser)
 
 On git push → GitHub Actions runs the build pipeline
                     │
@@ -75,6 +79,7 @@ The architecture has two rendering paths:
 |---|---|---|---|---|
 | **Typst pipeline** | RenderCV | Technical / academic roles | Polished typographic | ✅ Excellent |
 | **Visual builder** | Reactive Resume | UX / design / creative roles | Graphically rich | ⚠️ Layout-dependent |
+| **HTML themes** | resumed + npm | Design exploration, portfolio | CSS-flexible, 100s of themes | ⚠️ Layout-dependent |
 
 ---
 
@@ -104,8 +109,9 @@ cv/
 │
 ├── output/                     ← git-ignored; rebuilt by make / CI
 │
-├── Makefile                    make academic | industry | targeted | all | clean
+├── Makefile                    make academic | industry | targeted | visual | all | clean
 ├── requirements.txt            rendercv[full]>=2.8, ruamel.yaml>=0.18
+├── package.json                resumed + jsonresume-theme-* (HTML theme pipeline)
 ├── .python-version             3.12 (pyenv)
 └── .gitignore
 ```
@@ -120,7 +126,10 @@ cv/
 | **RenderCV** | CV engine: YAML → Typst → PDF + HTML + MD | `pip install -r requirements.txt` (in devcontainer via `postCreateCommand`) |
 | **Typst** | PDF typesetting engine | Bundled inside `rendercv[full]` — no separate install |
 | **pandoc** | Markdown → DOCX conversion | `apt-get install pandoc` in Dockerfile |
-| **Node.js** | Optional: JSON Resume CLI tooling (`npx resume-cli`) | nvm in Dockerfile |
+| **Node.js** | Runtime for the HTML theme pipeline | nvm in Dockerfile |
+| **resumed** | HTML resume renderer: `resume.json` → themed HTML | `npm install` (in devcontainer via `postCreateCommand`) |
+| **jsonresume-theme-even** | Clean two-column HTML theme | `npm install` |
+| **jsonresume-theme-kendall** | Sidebar HTML theme with photo support | `npm install` |
 | **Reactive Resume v5.0.18** | Visual CV builder web UI | Docker image (`amruthpillai/reactive-resume:v5.0.18`) |
 | **browserless/chromium** | Headless Chromium for Reactive Resume's PDF export | Docker image (sibling service) |
 | **PostgreSQL 16** | Reactive Resume's database | Docker image (sibling service) |
@@ -151,7 +160,7 @@ cv/
 
    On first launch Docker builds the dev image and pulls the Reactive Resume stack (~400 MB total). This takes 3–5 minutes once; subsequent starts are instant.
 
-3. After the container starts, `postCreateCommand` runs `pip install -r requirements.txt` automatically.
+3. After the container starts, `postCreateCommand` runs `pip install -r requirements.txt && npm install` automatically.
 
 4. VS Code auto-forwards port 3000. The Reactive Resume web UI opens in your browser.
 
@@ -215,11 +224,31 @@ make industry
 # Build the targeted-example variant
 make targeted
 
-# Build all standard variants
+# Build all standard variants (Typst pipeline + HTML themes)
 make all
 
 # Remove all generated files
 make clean
+```
+
+**HTML theme pipeline** (`resumed`):
+
+```bash
+# Build all HTML theme outputs
+make visual
+# → output/visual-even.html
+# → output/visual-kendall.html
+
+# Build a single theme
+make visual-even
+make visual-kendall
+```
+
+View any HTML output with:
+
+```bash
+cd output && python3 -m http.server 8080
+# open http://localhost:8080/visual-even.html
 ```
 
 You can also invoke the build script directly, which is useful for custom or targeted variants:
@@ -253,10 +282,14 @@ sections:
 
 design:
   theme: engineeringresumes
-  color: "#00A693"
-  font_size: "10pt"
-  page_size: us-letter
-  text_alignment: justified
+  colors:
+    name: "#00A693"
+    section_titles: "#00A693"
+    links: "#00A693"
+  page:
+    size: us-letter
+  typography:
+    alignment: justified
 ```
 
 The `scripts/build.py` script reads this alongside `content/resume.json` and constructs the full RenderCV input. **The content file is never modified** — only the section list and design config change between variants.
@@ -324,21 +357,60 @@ This keeps `main` clean while giving you a full history of every tailored applic
 
 ---
 
-## Visual CVs (Reactive Resume)
+## Visual CVs (HTML Themes)
 
-For roles where visual design matters (UX, product design, creative agencies), use Reactive Resume instead of the Typst pipeline.
+For roles where visual design matters (UX, product design, creative agencies), two HTML-based pipelines are available alongside the Typst pipeline.
 
-Reactive Resume runs as a Docker service inside the devcontainer. It is accessible at **`http://localhost:3000`** in your host browser while the devcontainer is running.
+### HTML theme pipeline (resumed)
+
+`resumed` renders `content/resume.json` directly using any [JSON Resume theme](https://www.npmjs.com/search?q=jsonresume-theme) from npm — there are hundreds.
+
+```bash
+# Build all installed themes
+make visual
+
+# Build a specific theme
+make visual-even       # → output/visual-even.html
+make visual-kendall    # → output/visual-kendall.html
+```
+
+To add a new theme:
+
+```bash
+npm install --save-dev jsonresume-theme-<name>
+```
+
+Then add a target to `Makefile` and register it in the `visual` dependency list:
+
+```makefile
+visual: visual-even visual-kendall visual-<name>
+
+visual-<name>:
+	mkdir -p output
+	npx resumed render content/resume.json --theme jsonresume-theme-<name> --output output/visual-<name>.html
+```
+
+To **customise** a theme, copy it locally and edit the CSS/HTML directly:
+
+```bash
+cp -r node_modules/jsonresume-theme-even themes/even-custom
+# edit themes/even-custom/ freely — it's plain HTML + CSS
+npx resumed render content/resume.json --theme ./themes/even-custom --output output/visual-custom.html
+```
+
+### Reactive Resume (web UI)
+
+Reactive Resume runs as a Docker service inside the devcontainer, accessible at **`http://localhost:3000`**.
 
 **Workflow:**
 
 1. Open `http://localhost:3000` and create an account (local only — data stays in the devcontainer's PostgreSQL volume).
 2. Create a new resume → **Import** → select `content/resume.json`.
-3. Pick a template from the template gallery (Azurill, Bronzor, Chikorita, Gengar, Glalie, Kakuna, Lapras, Leafish, Onyx, Pikachu, Rhyhorn, Ditto).
+3. Pick a template from the gallery (Azurill, Bronzor, Chikorita, Ditgar, Ditto, Gengar, Glalie, Kakuna, Lapras, Leafish, Onyx, Pikachu, Rhyhorn).
 4. Customise colours, fonts, spacing, and section order via the editor.
 5. **Export → PDF** to download the rendered file.
 
-When your data changes, re-import `content/resume.json` to sync. Your template selection and customisations are preserved between imports.
+When your data changes, re-import `content/resume.json` to sync.
 
 > **ATS note:** Visually complex layouts (heavy colour blocks, multi-column sections, icon-heavy sidebars) score poorly with automated applicant tracking systems. Use the Typst pipeline variants for applications submitted through ATS-screened portals, and the visual PDF only when a human reviews it first.
 
@@ -372,6 +444,7 @@ The index page links to each variant's HTML version. PDFs are available as CI ar
 | Dependency | Lock mechanism |
 |---|---|
 | Python packages | `requirements.txt` with minimum version pins; `pip install` inside devcontainer |
+| Node packages | `package.json` with exact versions; `npm install` inside devcontainer |
 | Python version | `.python-version` (read by pyenv; also declared in `actions/setup-python`) |
 | Reactive Resume | Image pinned to `v5.0.18` in `docker-compose.yml` |
 | PostgreSQL | Image pinned to `postgres:16` in `docker-compose.yml` |
@@ -388,6 +461,14 @@ make all
 ```
 
 To upgrade Reactive Resume, update the image tag in `.devcontainer/docker-compose.yml` and rebuild the container.
+
+To add or upgrade HTML themes:
+
+```bash
+npm install --save-dev jsonresume-theme-<name>
+# add a make target in Makefile, then:
+make visual-<name>
+```
 
 ---
 
@@ -442,4 +523,4 @@ Set `design.theme` in any variant file to one of:
 | `ink` | Bold section headers | Creative-adjacent industry |
 | `ember` | Warm accent tones | Industry |
 
-All themes accept the same `design` sub-keys: `color`, `font_size`, `page_size` (`a4` or `us-letter`), `text_alignment` (`justified` or `left`).
+All themes accept the same `design` sub-keys: `colors.name/section_titles/links/headline/connections`, `page.size` (`a4` or `us-letter`), `typography.alignment` (`justified` or `left`).

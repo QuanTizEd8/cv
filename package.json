@@ -1,0 +1,30 @@
+{
+  "name": "cv",
+  "version": "1.0.0",
+  "description": "A version-controlled CV/resume system built around a single source of truth — one JSON file containing all career data — rendered into multiple professional PDF outputs via swappable templates, with zero data duplication across variants.",
+  "main": "index.js",
+  "scripts": {
+    "visual:even": "resumed render content/resume.json --theme jsonresume-theme-even --output output/visual-even.html && node scripts/html-to-pdf.js output/visual-even.html output/visual-even.pdf A4",
+    "visual:kendall": "resumed render content/resume.json --theme jsonresume-theme-kendall --output output/visual-kendall.html && node scripts/html-to-pdf.js output/visual-kendall.html output/visual-kendall.pdf A4",
+    "visual": "npm run visual:even && npm run visual:kendall"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/QuanTizEd8/cv.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/QuanTizEd8/cv/issues"
+  },
+  "homepage": "https://github.com/QuanTizEd8/cv#readme",
+  "devDependencies": {
+    "jsonresume-theme-even": "^0.26.1",
+    "jsonresume-theme-kendall": "^0.2.0",
+    "puppeteer": "^24.42.0",
+    "resume-cli": "^3.0.8",
+    "resumed": "^6.1.0"
+  }
+}

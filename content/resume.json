@@ -6,7 +6,7 @@
     "label": "Your Title / Role",
     "image": "",
     "email": "you@example.com",
-    "phone": "+1 555-555-5555",
+    "phone": "+1-800-555-0100",
     "url": "https://yourwebsite.com",
     "summary": "A brief professional summary — 2–3 sentences that work across both industry and academic contexts. Tailor the emphasis per variant via the variant YAML.",
     "location": {
@@ -41,7 +41,6 @@
       "position": "Job Title / Role",
       "url": "https://company.com",
       "startDate": "2022-01",
-      "endDate": "",
       "summary": "One-line description of the role (optional; omit if highlights are self-explanatory).",
       "highlights": [
         "Specific, quantified achievement — e.g. reduced inference latency by 40% via kernel fusion.",

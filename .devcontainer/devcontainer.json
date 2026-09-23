@@ -7,8 +7,9 @@
   "service": "app",
   "workspaceFolder": "/workspaces/cv",
 
-  // Install Python deps after the container first starts.
-  "postCreateCommand": "pip install -r requirements.txt",
+  // Install Python and Node deps after the container first starts.
+  // The apt step installs shared libraries required by Puppeteer's bundled Chromium.
+  "postCreateCommand": "sudo apt-get update -qq && sudo apt-get install -y --no-install-recommends libglib2.0-0 libnss3 libatk1.0-0 libatk-bridge2.0-0 libcups2 libdrm2 libxkbcommon0 libxcomposite1 libxdamage1 libxfixes3 libxrandr2 libgbm1 libasound2 && pip install -r requirements.txt && npm install",
 
   // Forward Reactive Resume's web UI to the host. VS Code will open a
   // browser tab automatically on first start.
@@ -23,6 +24,8 @@
   "customizations": {
     "vscode": {
       "extensions": [
+        "yzhang.markdown-all-in-one",
+        "ritwickdey.liveserver",
         // YAML language support + schema validation for variant files
         "redhat.vscode-yaml",
         // Python IntelliSense

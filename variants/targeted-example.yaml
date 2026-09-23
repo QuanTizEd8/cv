@@ -24,7 +24,13 @@ sections:
 
 design:
   theme: classic
-  color: "#004f90"
-  font_size: "10pt"
-  page_size: us-letter
-  text_alignment: justified
+  colors:
+    name: "#004f90"
+    section_titles: "#004f90"
+    links: "#004f90"
+    headline: "#004f90"
+    connections: "#004f90"
+  page:
+    size: us-letter
+  typography:
+    alignment: justified

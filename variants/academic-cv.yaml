@@ -45,7 +45,11 @@ section_titles:
 # Run `rendercv render --help` for the full list of design keys.
 design:
   theme: moderncv
-  color: "#003580"
-  font_size: "10pt"
-  page_size: a4
-  text_alignment: justified
+  colors:
+    name: "#003580"
+    section_titles: "#003580"
+    links: "#003580"
+  page:
+    size: a4
+  typography:
+    alignment: justified

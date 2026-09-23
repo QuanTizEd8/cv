@@ -17,7 +17,11 @@ sections:
 
 design:
   theme: engineeringresumes
-  color: "#00A693"
-  font_size: "10pt"
-  page_size: us-letter
-  text_alignment: justified
+  colors:
+    name: "#00A693"
+    section_titles: "#00A693"
+    links: "#00A693"
+  page:
+    size: us-letter
+  typography:
+    alignment: justified
